@@ -1,7 +1,6 @@
 <template>
-    <div id="product"
-        class="product__wrapper"
-        @click="addProduct(productData)">
+    <div :id="setId(productData)"
+        class="product__wrapper">
         <div class="product__image__wrapper">
             <img :src="productData.image" 
                 class="product__image"/>
@@ -15,6 +14,11 @@
         <p class="product__info">
             {{ setCurrencySign(productData?.regular_price?.currency) }}{{ productData?.regular_price?.value }}
         </p>
+
+        <button class="product__button"
+            @click="addProduct(productData)">
+            Добавить
+        </button>
     </div>
 </template>
 
@@ -32,10 +36,14 @@
                 else return ''
             },
             addProduct(productData) {
-                var btn = document.getElementById("product");
+                /*var btn = document.getElementById('product' + productData.id);
                 btn.addEventListener("click", function() {
                     this.classList.add("product__added");
-                });
+                });*/
+            },
+            setId (productData) {
+                const id = 'product' + productData.id
+                return id
             }
         }
     }
@@ -49,11 +57,15 @@
         padding: 5px;
         border: 1px solid #fff;
     }
-    .product__wrapper:hover {
-        cursor: pointer;
-        border: 1px solid #ffdd00;
+    .product__button {
+        font-size: 16px;
+        padding: 5px;
+        width: 100%;
+        background-color: #fff;
+        border: 1px solid #808080;
     }
-    .product__added {
+    .product__button:hover {
+        cursor: pointer;
         border: 1px solid #ffdd00;
     }
     .product__name {
