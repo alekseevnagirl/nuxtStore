@@ -19,6 +19,9 @@
 </template>
 
 <script>
+    import products from '~/static/products.json'
+    import brands from '~/static/brands.json'
+
     export default {
         data() {
             return {
@@ -28,46 +31,12 @@
             }
         },
         mounted() {
-            this.filterData =
-                { defaultFilter: 'All Brands', data: [
-                    {
-                        "id": 1,
-                        "title": "Brand 1",
-                    },
-                    {
-                        "id": 2,
-                        "title": "Brand 2"
-                    },
-                    {
-                        "id": 3,
-                        "title": "Brand 3"
-                    }
-                ]};
+            console.log(products)
 
-            this.productData = [{
-                "type": "simple",
-                "id": 1,
-                "sku": "s1",
-                "title": "Product 1",
-                "regular_price": {
-                "currency": "USD",
-                "value": 27.12
-                },
-                "image": "/images/1.png",
-                "brand": 9
-            },
-            {
-                "type": "simple",
-                "id": 2,
-                "sku": "s2",
-                "title": "Product 2",
-                "regular_price": {
-                "currency": "USD",
-                "value": 36.87
-                },
-                "image": "/images/2.png",
-                "brand": 8
-            }];
+            this.filterData =
+                { defaultFilter: 'All Brands', data: brands};
+
+            this.productData = products;
         }
     }
 </script>
@@ -91,9 +60,7 @@
         flex-direction: row;
         flex-wrap: wrap;
         justify-content: flex-start;
-        gap: 20px;
-    }
-    .catalog__item {
+        gap: 50px;
     }
     .catalog__title {
         font-size: 24px;
