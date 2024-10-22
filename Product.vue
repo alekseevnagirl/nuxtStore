@@ -12,7 +12,7 @@
             {{ productData.brandName }}
         </p>
         <p class="product__info">
-            {{ setCurrencySign(productData?.regular_price?.currency) }}{{ productData?.regular_price?.value }}
+            {{ setCurrencySign(productData?.regular_price?.currency) }}{{ setPrice(productData?.regular_price?.value) }}
         </p>
 
         <button class="product__button"
@@ -36,14 +36,14 @@
                 else return ''
             },
             addProduct(productData) {
-                /*var btn = document.getElementById('product' + productData.id);
-                btn.addEventListener("click", function() {
-                    this.classList.add("product__added");
-                });*/
             },
             setId (productData) {
                 const id = 'product' + productData.id
                 return id
+            },
+            setPrice(value) {
+                const price = parseFloat(value.toFixed(2))
+                return price
             }
         }
     }
