@@ -15,7 +15,8 @@
                 step="1" 
                 min="1" 
                 class="cartItem__quantity"
-                :value="cartItemData.quantity"/>
+                :value="cartItemData.quantity"
+                @change="changeQuantity($event.target.value, cartItemData)"/>
         </div>
 
         <div>
@@ -53,6 +54,10 @@
                 if (item.regular_price.currency === 'USD') currency = '$' 
                 const priceCurrency = currency + (item.regular_price.value * item.quantity).toFixed(2)
                 return priceCurrency
+            },
+            changeQuantity(quantity, item) {
+                item.quantity = parseInt(quantity);
+                this.$store.commit('updateCart', item)
             }
         }
     }
@@ -68,6 +73,7 @@
     .cartItem__wrapper div {
         padding: 5px;
         flex: 1 1 10%;
+        font-size: 18px;
     }
     .cartItem__image__wrapper {
         display: flex;
