@@ -7,7 +7,7 @@
         </div>
 
         <div>
-            <p>{{ cartItemData.regular_price.value }}</p>
+            <p>{{ getPrice(cartItemData.regular_price) }}</p>
         </div>
 
         <div>
@@ -42,8 +42,17 @@
             deleteFromCart(id) {
                 this.$store.commit("deleteFromCart", id)
             },
+            getPrice(price) {
+                var currency = ''
+                if (price.currency === 'USD') currency = '$' 
+                const priceCurrency = currency + parseFloat(price.value.toFixed(2))
+                return priceCurrency
+            },
             getTotal(item) {
-                return (item.regular_price.value * item.quantity).toFixed(2)
+                var currency = ''
+                if (item.regular_price.currency === 'USD') currency = '$' 
+                const priceCurrency = currency + (item.regular_price.value * item.quantity).toFixed(2)
+                return priceCurrency
             }
         }
     }
