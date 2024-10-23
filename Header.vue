@@ -5,13 +5,33 @@
         </NuxtLink>
         <NuxtLink to="/cart" v-if="route.path === '/'">
             <img src="/images/icons/cart.png" class="header__icon"/>
+            <span>{{ quantity }}</span>
         </NuxtLink>
     </div>
 </template>
 
-<script setup lang="ts">
-    const route = useRoute()
+<script>
+    //import {useRoute} from 'vue-router'
+    //const route = useRoute()
+    export default {
+        data() {
+            return {
+                route: useRoute(),
+                quantity: 0
+            }
+        },
+        computed: {
+            quantity() {
+                var count = 0;
+                this.$store.state.cart.forEach((item) => {
+                    count = count + item.quantity
+                })
+                return count
+            }
+        }
+    }
 </script>
+
 
 <style scoped>
     .header__wrapper {
