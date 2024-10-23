@@ -1,5 +1,5 @@
 <template>
-    <div :id="setId(productData)"
+    <div :id="getId(productData)"
         class="product__wrapper">
         <div class="product__image__wrapper">
             <img :src="productData.image" 
@@ -12,7 +12,7 @@
             {{ productData.brandName }}
         </p>
         <p class="product__info">
-            {{ setCurrencySign(productData?.regular_price?.currency) }}{{ setPrice(productData?.regular_price?.value) }}
+            {{ getPrice(productData.regular_price) }} <!-- set -> get (define) -->
         </p>
 
         <button class="product__button"
@@ -31,19 +31,18 @@
             }
         },
         methods: {
-            setCurrencySign(currency) {
-                if (currency === 'USD') return '$'
-                else return ''
-            },
             addProduct(productData) {
+                this.$store.commit("addToCart", productData)
             },
-            setId (productData) {
+            getId (productData) {
                 const id = 'product' + productData.id
                 return id
             },
-            setPrice(value) {
-                const price = parseFloat(value.toFixed(2))
-                return price
+            getPrice(price) {
+                var currency = ''
+                if (price.currency === 'USD') currency = '$' 
+                const priceCurrency = currency + parseFloat(price.value.toFixed(2))
+                return priceCurrency
             }
         }
     }
