@@ -1,13 +1,16 @@
 <template>
     <div class="cartItem__wrapper">
-        <div class="cartItem__image__wrapper">
+        <div>
             <img :src="cartItemData.image"
                 class="cartItem__image"/>
+        </div>
+
+        <div class="cartItem__image__wrapper">
             <p>{{ cartItemData.brandName }} / {{ cartItemData.title }}</p>
         </div>
 
         <div>
-            <p>{{ cartItemData.regular_price }}</p> <!-- computed, not method -->
+            <p>{{ currency }}{{ cartItemData.regular_price.value }}</p>
         </div>
 
         <div>
@@ -20,10 +23,10 @@
         </div>
 
         <div>
-            <p>{{ getTotal(cartItemData) }}</p>
+            <p>{{ currency }}{{ total }}</p>
         </div>
 
-        <div>
+        <div class="cartItem__trash__wrapper">
             <img src="/images/icons/trash.png"
                 class="cartItem__trash"
                 @click="deleteFromCart(cartItemData.id)"/>
@@ -33,27 +36,31 @@
 
 <script>
     export default {
+        data() {
+            return {
+                currency: '',
+                total: 0
+            }
+        },
         props: {
             cartItemData: {
                 type: Object,
                 default: {}
             }
         },
+        computed: {
+            currency() {
+                if (this.cartItemData.regular_price.currency) return '$'
+                else return ''
+            },
+            total() {
+                let totalPrice = (this.cartItemData.regular_price.value * this.cartItemData.quantity).toFixed(2)
+                return totalPrice
+            }
+        },
         methods: {
             deleteFromCart(id) {
                 this.$store.commit("deleteFromCart", id)
-            },
-            getPrice(price) {
-                let currency = ''
-                if (price.currency === 'USD') currency = '$' 
-                const priceCurrency = currency + parseFloat(price.value.toFixed(2))
-                return priceCurrency
-            },
-            getTotal(item) {
-                let currency = ''
-                if (item.regular_price.currency === 'USD') currency = '$' 
-                const priceCurrency = currency + (item.regular_price.value * item.quantity).toFixed(2)
-                return priceCurrency
             },
             changeQuantity(quantity, item) {
                 item.quantity = parseInt(quantity);
@@ -77,10 +84,13 @@
         flex: 1 1 10%;
         font-size: 18px;
     }
+    .cartItem__wrapper div p {
+        margin: 0;
+    }
     .cartItem__image__wrapper {
         display: flex;
         align-items: center;
-        flex: 1 1 60% !important;
+        flex: 1 1 50% !important;
     }
     .cartItem__image {
         width: 100px;
@@ -91,8 +101,22 @@
     }
     .cartItem__trash {
         width: 20px;
+        padding: 5px;
     }
     .cartItem__trash:hover {
         cursor: pointer;
+    }
+
+    @media(max-width: 768px) {
+        .cartItem__wrapper {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .cartItem__trash__wrapper {
+            width: 100%;
+        }
+        .cartItem__trash {
+            float: right;
+        }
     }
 </style>
