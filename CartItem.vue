@@ -7,7 +7,7 @@
         </div>
 
         <div>
-            <p>{{ getPrice(cartItemData.regular_price) }}</p>
+            <p>{{ cartItemData.regular_price }}</p> <!-- computed, not method -->
         </div>
 
         <div>
@@ -44,13 +44,13 @@
                 this.$store.commit("deleteFromCart", id)
             },
             getPrice(price) {
-                var currency = ''
+                let currency = ''
                 if (price.currency === 'USD') currency = '$' 
                 const priceCurrency = currency + parseFloat(price.value.toFixed(2))
                 return priceCurrency
             },
             getTotal(item) {
-                var currency = ''
+                let currency = ''
                 if (item.regular_price.currency === 'USD') currency = '$' 
                 const priceCurrency = currency + (item.regular_price.value * item.quantity).toFixed(2)
                 return priceCurrency
@@ -68,7 +68,9 @@
         display: flex;
         flex-direction: row;
         align-items: center;
+        text-align: center;
         width: 100%;
+        border-bottom: 1px solid #000;
     }
     .cartItem__wrapper div {
         padding: 5px;
@@ -84,7 +86,8 @@
         width: 100px;
     }
     .cartItem__quantity {
-        width: 50px;
+        width: 70px;
+        font-size: inherit;
     }
     .cartItem__trash {
         width: 20px;

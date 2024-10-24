@@ -39,7 +39,7 @@
                 return id
             },
             getPrice(price) {
-                var currency = ''
+                let currency = ''
                 if (price.currency === 'USD') currency = '$' 
                 const priceCurrency = currency + parseFloat(price.value.toFixed(2))
                 return priceCurrency

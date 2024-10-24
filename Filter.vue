@@ -1,31 +1,64 @@
 <template>
     <div>
-        <button class="filter__button"
-            @click="filterOut(0)">
-            {{ filterData.defaultFilter }}
-        </button>
+        <div v-if="isMobile">
+            <select class="filter__select"
+                @change="filterOut($event.target.value)">
+                <option value="0" selected>
+                    {{ filterData.defaultFilter }}
+                </option>
 
-        <div v-for="(data, dataIndex) in filterData.data"
-            key="dataIndex">
-            <button class="filter__button"
-                @click="filterOut(data.id)">
+                <option v-for="(data, dataIndex) in filterData.data" 
+                    :key="dataIndex" 
+                    :value="data.id">
                 {{ data.title }}
+                </option>
+            </select>
+        </div>
+
+
+        <div v-else>
+            <button class="filter__button"
+                @click="filterOut(0)">
+                {{ filterData.defaultFilter }}
             </button>
+
+            <div v-for="(data, dataIndex) in filterData.data"
+                key="dataIndex">
+                <button class="filter__button"
+                    @click="filterOut(data.id)">
+                    {{ data.title }}
+                </button>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
 export default {
+    data() {
+        return {
+            isMobile: false
+        }
+    },
     props: {
         filterData: {
             type: Object,
             default: {}
         }
     },
+    mounted() {
+        this.checkMobile
+        window.addEventListener('resize', this.checkMobile);
+    },
+    beforeDestroy() {
+        window.removeEventListener('resize', this.checkMobile);
+    },
     methods: {
         filterOut(id) {
             this.$emit('selectedFilter', id);
+        },
+        checkMobile() {
+            this.isMobile = window.innerWidth <= 768
         }
     }
 }
@@ -44,5 +77,10 @@ export default {
     }
     .filter__button:focus {
         text-decoration: underline;
+    }
+    .filter__select {
+        width: 100%;
+        font-size: 18px;
+        padding: 5px;
     }
 </style>

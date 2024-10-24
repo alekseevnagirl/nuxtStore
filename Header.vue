@@ -26,7 +26,7 @@
         },
         computed: {
             quantity() {
-                var count = 0;
+                let count = 0;
                 this.$store.state.cart.forEach((item) => {
                     count = count + item.quantity
                 })
