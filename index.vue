@@ -20,13 +20,12 @@
 </template>
 
 <script>
-    import products from '~/static/products.json'
+    import products from '~/static/products.json' //асинхронно в режиме ssr - новый сабтаск
     import brands from '~/static/brands.json'
 
     export default {
         data() {
             return {
-                filters: ['Brand 1', 'Brand 2'],
                 filterData: [],
                 productData: [],
                 filterId: 0,
@@ -39,9 +38,11 @@
 
             this.productData = products;
             this.productData.forEach((product) => {
-                brands.forEach((brand) => {
+                if (product.quantity === undefined) product.quantity = 1;
+
+                brands.forEach((brand) => { //find
                     if (product.brand === brand.id)
-                    product.brandName = brand.title;
+                        product.brandName = brand.title;
                 })
             })
         },
@@ -49,7 +50,7 @@
             selectedFilter(id) {
                 this.filterId = id;
             },
-            setProductData(productData) {
+            setProductData(productData) { // в computed
                 this.productDataFiltered = productData;
                 if (this.filterId !== 0) {
                     this.productDataFiltered = productData.filter(product => {
@@ -87,5 +88,10 @@
         font-size: 24px;
         margin: 0;
         padding: 5px;
+    }
+    @media(max-width: 768px) {
+        .catalog__wrapper {
+            flex-direction: column;
+        }
     }
 </style>
