@@ -15,17 +15,10 @@
             {{ currency }}{{ productData.regular_price.value }}
         </p>
 
-        <v-card :title="productData.title" 
-            :text="subtitle">
-            <v-img
-                :width="250"
-                cover
-                :src="productData.image"
-            ></v-img>
-            <v-card-actions>
-                <v-btn @click="addProduct">Добавить</v-btn>
-            </v-card-actions>
-        </v-card>
+        <button class="product__button"
+            @click="addProduct">
+            Добавить
+        </button>
     </div>
 </template>
 
@@ -44,10 +37,6 @@
             },
             productDataId() {
                 return 'product' + this.productData?.id
-            },
-            subtitle() {
-                let info = this.productData.brandName + this.currency + this.productData.regular_price.value
-                return `${this.productData.brandName}<br>${this.currency}${this.productData.regular_price.value}`;
             }
         },
         methods: {
@@ -65,6 +54,17 @@
         gap: 5px;
         padding: 5px;
         border: 1px solid #fff;
+    }
+    .product__button {
+        font-size: 16px;
+        padding: 5px;
+        width: 100%;
+        background-color: #fff;
+        border: 1px solid #808080;
+    }
+    .product__button:hover {
+        cursor: pointer;
+        border: 1px solid #ffdd00;
     }
     .product__name {
         font-size: 20px;
