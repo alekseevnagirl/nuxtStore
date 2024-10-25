@@ -36,13 +36,7 @@
                     if (brand) product.brandName = brand.title;
                     else product.brandName = '';
                 })
-
                 this.filterData = useState('setBrands')
-                this.filterData = [].concat({ 
-                    "id": 0,
-                    "title": "All Brands"
-                })
-                .concat(this.filterData)
             } catch (error) {
                 console.error(error);
                 this.productsData = [];
