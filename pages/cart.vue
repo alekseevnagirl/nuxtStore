@@ -17,9 +17,9 @@
 
         <div class="cart__subtotal">
             <p>Subtotal: {{ currency }}{{ subtotal }}</p>
-            <v-btn>
+            <button>
                 Checkout
-            </v-btn>
+            </button>
         </div>
     </div>
 </template>
