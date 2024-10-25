@@ -19,42 +19,49 @@
 </template>
 
 <script>
-    import products from '~/static/products.json' //асинхронно в режиме ssr - новый сабтаск
-    import brands from '~/static/brands.json'
-
     export default {
         data() {
             return {
-                filterData: [],
-                productData: [],
+                productsData:[],
                 filterId: 0
+            }
+        },
+        mounted() {
+            try {
+                this.productsData = useState('setProducts')
+                this.productsData.forEach((product) => {
+                    product.quantity = 1;
+                    const brand = brands.find((brand) => product.brand === brand.id);
+                    if (brand) product.brandName = brand.title;
+                    else product.brandName = '';
+                })
+
+                this.filterData = useState('setBrands')
+                this.filterData = [].concat({ 
+                    "id": 0,
+                    "title": "All Brands"
+                })
+                .concat(this.filterData)
+            } catch (error) {
+                console.error(error);
+                this.productsData = [];
+                this.filterData = [];
             }
         },
         computed: {
             products() {
-                let productDataFiltered = this.productData;
+                let productsDataFiltered = this.productsData;
                 if (this.filterId !== 0) {
-                    productDataFiltered = this.productData.filter(product => {
+                    productsDataFiltered = this.productsData.filter(product => {
                         return product.brand === this.filterId;
                     });
                 }
-                return productDataFiltered
-            }
-        },
-        mounted() {
-            this.filterData = [].concat({ 
-                "id": 0,
-                "title": "All Brands"
-            })
-            .concat(brands)
+                return productsDataFiltered
+            },
 
-            this.productData = products;
-            this.productData.forEach((product) => {
-                product.quantity = 1;
-                const brand = brands.find((brand) => product.brand === brand.id);
-                if (brand) product.brandName = brand.title;
-                else product.brandName = '';
-            })
+            filterData() {
+                return useState('setBrands')
+            }
         },
         methods: {
             selectedFilter(id) {

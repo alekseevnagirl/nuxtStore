@@ -45,12 +45,6 @@
 
 <script>
     export default {
-        data() {
-            return {
-                currency: '',
-                total: 0
-            }
-        },
         props: {
             cartItemData: {
                 type: Object,
