@@ -3,7 +3,6 @@
         class="cartItem__wrapper">
             <div class="cartItem__image__wrapper">
                 <v-img
-                    :width="150"
                     cover
                     :src="cartItemData.image"
                     class="cartItem__image"
@@ -116,9 +115,11 @@
     .cartItem__quantity {
         width: 70px;
         font-size: inherit;
+        padding: 2px;
+        border: 1px solid #000;
     }
     .cartItem__trash {
-        width: 20px;
+        width: 30px;
         padding: 5px;
     }
     .cartItem__trash:hover {
@@ -139,13 +140,13 @@
         }
         .cartItem__trash {
             float: right;
-            width: 17px;
+            width: 30px;
         }
         .cartItem__trash__wrapper {
             width: 100%;
         }
         .cartItem__image {
-            width: auto;
+            width: 150px;
             height: 150px;
         }
         .cartItem__brand {
