@@ -2,16 +2,26 @@
     <div :id="productDataId"
         class="product__wrapper">
 
-        <v-card :title="productData.title" 
-            :text="subtitle">
+        <v-card>
             <v-img
                 :width="250"
                 cover
                 :src="productData.image"
             ></v-img>
-            
+
+            <v-card-title>
+                {{ productData.title }}
+            </v-card-title>
+
+            <v-card-subtitle class="product__subtitle">
+                {{ subtitle }}
+            </v-card-subtitle>
+
             <v-card-actions>
-                <v-btn @click="addProduct">Добавить</v-btn>
+                <v-btn @click="addProduct"
+                    class="product__button">
+                    Добавить
+                </v-btn>
             </v-card-actions>
         </v-card>
 
@@ -36,7 +46,7 @@
             },
             subtitle() {
                 let info = this.productData.brandName + this.currency + this.productData.regular_price.value
-                return `${this.productData.brandName}<br>${this.currency}${this.productData.regular_price.value}`;
+                return `${this.productData.brandName}\n${this.currency}${this.productData.regular_price.value}`;
             }
         },
         methods: {
@@ -55,20 +65,10 @@
         padding: 5px;
         border: 1px solid #fff;
     }
-    .product__name {
-        font-size: 20px;
-        margin: 0;
+    .product__subtitle {
+        white-space: pre-line;
     }
-    .product__info {
-        font-size: 16px;
-        margin: 0;
-    }
-    .product__image__wrapper {
-        height: 300px;
-        width: 250px;
-        align-content: center;
-    }
-    .product__image {
-        width: inherit;
+    .product__button {
+        width: 100%;
     }
 </style>
