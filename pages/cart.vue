@@ -16,7 +16,7 @@
         </div>
 
         <div class="cart__subtotal">
-            <p>Subtotal: {{ currency }}{{ subtotal }}</p>
+            Subtotal: {{ currency }}{{ subtotal }}
             <v-btn>
                 Checkout
             </v-btn>
@@ -78,12 +78,8 @@
         flex-direction: column;
         font-size: 24px;
         font-weight: bold;
-    }
-    .cart__subtotal button {
-        font-size: 18px;
-        padding: 5px 20px;
-        background-color: #fff;
-        box-shadow: 10px 5px 5px #808080;
+        gap: 20px;
+        padding: 10px;
     }
 
     @media(max-width: 768px) {

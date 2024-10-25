@@ -42,8 +42,11 @@
             }
         },
         mounted() {
-            this.filterData =
-                { defaultFilter: 'All Brands', data: brands};
+            this.filterData = [].concat({ 
+                "id": 0,
+                "title": "All Brands"
+            })
+            .concat(brands)
 
             this.productData = products;
             this.productData.forEach((product) => {

@@ -1,30 +1,17 @@
 <template>
     <div>
         <div v-if="isMobile">
-            <select class="filter__select"
-                @change="filterOut($event.target.value)">
-                <option :value="0">
-                    {{ filterData.defaultFilter }}
-                </option>
-
-                <option v-for="(data, dataIndex) in filterData.data" 
-                    :key="dataIndex" 
-                    :value="data.id">
-                {{ data.title }}
-                </option>
-            </select>
+            <v-select
+                v-model="selectedFilter"
+                :items="filterData"
+                @change="filterOut(selectedFilter.id)">
+            </v-select>
         </div>
-
 
         <div v-else>
             <v-list lines="one">
                 <v-list-item
-                    :title="filterData.defaultFilter"
-                    @click="filterOut(0)">
-                </v-list-item>
-
-                <v-list-item
-                    v-for="(data, dataIndex) in filterData.data"
+                    v-for="(data, dataIndex) in filterData"
                     :key="dataIndex"
                     :title="data.title"
                     @click="filterOut(data.id)">
@@ -38,7 +25,8 @@
 export default {
     data() {
         return {
-            isMobile: false
+            isMobile: false,
+            selectedFilter: null
         }
     },
     props: {
@@ -50,12 +38,14 @@ export default {
     mounted() {
         this.checkMobile()
         window.addEventListener('resize', this.checkMobile);
+        this.selectedFilter = this.filterData[0];
     },
     beforeDestroy() {
         window.removeEventListener('resize', this.checkMobile);
     },
     methods: {
         filterOut(id) {
+            console.log(id)
             this.$emit('selectedFilter', parseInt(id));
         },
         checkMobile() {
@@ -66,19 +56,6 @@ export default {
 </script>
 
 <style scoped>
-    .filter__button {
-        border: none;
-        background: none;
-        font-size: 18px;
-        padding: 0;
-        margin: 0 0 10px 0;
-    }
-    .filter__button:hover {
-        cursor: pointer;
-    }
-    .filter__button:focus {
-        text-decoration: underline;
-    }
     .filter__select {
         width: 100%;
         font-size: 18px;

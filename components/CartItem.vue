@@ -1,42 +1,44 @@
 <template>
-    <div class="cartItem__wrapper">
-
-        <div class="cartItem__image__wrapper">
-            <img :src="cartItemData.image"
-                class="cartItem__image"/>
-        </div>
-
-        <div class="cartItem__info__wrapper">
+    <v-card variant="outlined"
+        class="cartItem__wrapper">
+            <div class="cartItem__image__wrapper">
+                <v-img
+                    :width="150"
+                    cover
+                    :src="cartItemData.image"
+                    class="cartItem__image"
+                ></v-img>
+            </div>
             
-            <div class="cartItem__brand">
-                {{ cartItemData.brandName }} / {{ cartItemData.title }}
-            </div>
+            <div class="cartItem__info__wrapper">
+                <div class="cartItem__brand">
+                    {{ cartItemData.brandName }} / {{ cartItemData.title }}
+                </div>
 
-            <div class="cartItem__price">
-                {{ currency }}{{ cartItemData?.regular_price?.value }}
-            </div>
+                <div class="cartItem__price">
+                    {{ currency }}{{ cartItemData?.regular_price?.value }}
+                </div>
 
-            <div>
-                <input type="number" 
-                    step="1" 
-                    min="1" 
-                    class="cartItem__quantity"
-                    :value="cartItemData.quantity"
-                    @change="changeQuantity($event.target.value, cartItemData)"/>
-            </div>
+                <div>
+                    <input type="number" 
+                        step="1" 
+                        min="1" 
+                        class="cartItem__quantity"
+                        :value="cartItemData.quantity"
+                        @change="changeQuantity($event.target.value, cartItemData)"/>
+                </div>
 
-            <div class="cartItem__total">
-                {{ currency }}{{ total }}
-            </div>
+                <div class="cartItem__total">
+                    {{ currency }}{{ total }}
+                </div>
 
-            <div class="cartItem__trash__wrapper">
-                <img src="/images/icons/trash.png"
-                    class="cartItem__trash"
-                    @click="deleteFromCart(cartItemData.id)"/>
+                <div class="cartItem__trash__wrapper">
+                    <img src="/images/icons/trash.png"
+                        class="cartItem__trash"
+                        @click="deleteFromCart(cartItemData.id)"/>
+                </div>
             </div>
-
-        </div>
-    </div>
+    </v-card>
 </template>
 
 <script>
@@ -79,6 +81,7 @@
     .cartItem__wrapper {
         display: flex;
         border-bottom: 1px solid #000;
+        margin: 10px 0;
     }
     .cartItem__image__wrapper {
         flex: 1 1 20%;
