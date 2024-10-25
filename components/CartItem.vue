@@ -19,12 +19,15 @@
                 </div>
 
                 <div>
-                    <input type="number" 
+                    <v-text-field 
+                        type="number" 
                         step="1" 
-                        min="1" 
+                        min="1"
+                        hide-details
                         class="cartItem__quantity"
                         :value="cartItemData.quantity"
-                        @change="changeQuantity($event.target.value, cartItemData)"/>
+                        @change="changeQuantity($event.target.value, cartItemData)">
+                    </v-text-field>
                 </div>
 
                 <div class="cartItem__total">
@@ -90,6 +93,7 @@
         display: flex;
         align-items: center;
         text-align: center;
+        justify-content: center;
         width: 100%;
     }
     .cartItem__info__wrapper div {
@@ -110,13 +114,11 @@
         flex: 1 1 40% !important;
     }
     .cartItem__image {
-        width: 100px;
+        width: 150px;
     }
     .cartItem__quantity {
-        width: 70px;
+        width: 100%;
         font-size: inherit;
-        padding: 2px;
-        border: 1px solid #000;
     }
     .cartItem__trash {
         width: 30px;
@@ -160,6 +162,9 @@
         }
         .cartItem__total {
             font-weight: bold;
+        }
+        .cartItem__quantity {
+            width: 70px;
         }
     }
 </style>
