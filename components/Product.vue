@@ -1,19 +1,6 @@
 <template>
     <div :id="productDataId"
         class="product__wrapper">
-        <div class="product__image__wrapper">
-            <img :src="productData.image" 
-                class="product__image"/>
-        </div>
-        <p class="product__name">
-            {{ productData.title }}
-        </p>
-        <p class="product__info">
-            {{ productData.brandName }}
-        </p>
-        <p class="product__info">
-            {{ currency }}{{ productData.regular_price.value }}
-        </p>
 
         <v-card :title="productData.title" 
             :text="subtitle">
@@ -22,10 +9,12 @@
                 cover
                 :src="productData.image"
             ></v-img>
+            
             <v-card-actions>
                 <v-btn @click="addProduct">Добавить</v-btn>
             </v-card-actions>
         </v-card>
+
     </div>
 </template>
 
