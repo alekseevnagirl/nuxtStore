@@ -17,18 +17,19 @@
 
 
         <div v-else>
-            <button class="filter__button"
-                @click="filterOut(0)">
-                {{ filterData.defaultFilter }}
-            </button>
+            <v-list lines="one">
+                <v-list-item
+                    :title="filterData.defaultFilter"
+                    @click="filterOut(0)">
+                </v-list-item>
 
-            <div v-for="(data, dataIndex) in filterData.data"
-                key="dataIndex">
-                <button class="filter__button"
+                <v-list-item
+                    v-for="(data, dataIndex) in filterData.data"
+                    :key="dataIndex"
+                    :title="data.title"
                     @click="filterOut(data.id)">
-                    {{ data.title }}
-                </button>
-            </div>
+                </v-list-item>
+            </v-list>
         </div>
     </div>
 </template>
