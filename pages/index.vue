@@ -22,6 +22,7 @@
     export default {
         data() {
             return {
+                filterData: [],
                 productsData:[],
                 filterId: 0
             }
@@ -57,10 +58,6 @@
                     });
                 }
                 return productsDataFiltered
-            },
-
-            filterData() {
-                return useState('setBrands')
             }
         },
         methods: {
