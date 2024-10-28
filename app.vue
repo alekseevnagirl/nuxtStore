@@ -29,7 +29,7 @@
 
   const fetchProducts = async () => {
     try {
-      products.value = await $fetch('/products.json');
+      products.value = await $fetch('/level3/products.json');
       products.value.forEach((product) => {
         product.quantity = 1;
         let brand = brands.value.find((brand) => product.brand === brand.id);
