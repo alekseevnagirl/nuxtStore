@@ -2,11 +2,12 @@
     <div>
         <div v-if="isMobile">
             <v-select
-                v-model="selectedId"
+                :model-value="selectedFilterData"
                 :items="filterData"
-                :item-title="title"
-                :item-value="id"
-                @change="filterOut(selectedId)">
+                item-text="title"
+                item-value="id"
+                return-object
+                @update:model-value="filterOut(selectedFilterData.id)">
             </v-select>
         </div>
 
@@ -30,12 +31,8 @@ export default {
     data() {
         return {
             isMobile: false,
-            selectedId: 0
-        }
-    },
-    computed: {
-        selectedFilter() {
-            return this.filterData[this.selectedId]
+            selectedId: 0,
+            selectedFilterData: null
         }
     },
     props: {
@@ -44,15 +41,23 @@ export default {
             default: {}
         }
     },
+    watch: {
+        filterData(newValue) {
+            if (newValue.length > 0) {
+                this.selectedFilterData = newValue[this.selectedId];
+            }
+        }
+    },
     mounted() {
         this.checkMobile()
         window.addEventListener('resize', this.checkMobile);
+        this.selectedFilterData = this.filterData[this.selectedId]
     },
     beforeDestroy() {
         window.removeEventListener('resize', this.checkMobile);
     },
     methods: {
-        filterOut(id) {
+        filterOut(id) { console.log(123)
             this.$emit('selectedFilter', parseInt(id));
             this.selectedId = id;
         },

@@ -28,20 +28,8 @@
             }
         },
         mounted() {
-            try {
-                this.productsData = useState('setProducts')
-                this.productsData.forEach((product) => {
-                    product.quantity = 1;
-                    const brand = brands.find((brand) => product.brand === brand.id);
-                    if (brand) product.brandName = brand.title;
-                    else product.brandName = '';
-                })
-                this.filterData = useState('setBrands')
-            } catch (error) {
-                console.error(error);
-                this.productsData = [];
-                this.filterData = [];
-            }
+            this.filterData = useState('setBrands')
+            this.productsData = useState('setProducts')
         },
         computed: {
             products() {

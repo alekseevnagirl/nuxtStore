@@ -9,16 +9,8 @@
 </template>
 
 <script setup>
-  let products = useState('setProducts', () => []);
   let brands = useState('setBrands', () => []);
-
-  const fetchProducts = async () => {
-    try {
-      products.value = await $fetch('/products.json');
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  let products = useState('setProducts', () => []);
 
   const fetchBrands = async () => {
     try {
@@ -35,8 +27,22 @@
     }
   };
 
+  const fetchProducts = async () => {
+    try {
+      products.value = await $fetch('/products.json');
+      products.value.forEach((product) => {
+        product.quantity = 1;
+        let brand = brands.value.find((brand) => product.brand === brand.id);
+        if (brand) product.brandName = brand.title;
+        else product.brandName = '';
+    })
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   onMounted(() => {
-    fetchProducts();
     fetchBrands();
+    fetchProducts();
   });
 </script>

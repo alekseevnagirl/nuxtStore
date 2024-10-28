@@ -18,6 +18,8 @@ const store = createStore({
         if (checkSame === 0) state.cart.push(product)
     },
     deleteFromCart(state, productId) {
+        let index = state.cart.findIndex((item) => item.id === productId);
+        state.cart[index].quantity = 1;
         state.cart = state.cart.filter((product) => product.id !== productId)
     },
     updateCart(state, product) {
