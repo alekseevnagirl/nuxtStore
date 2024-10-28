@@ -2,7 +2,7 @@
     <div>
         <div v-if="isMobile">
             <v-select
-                :model-value="selectedFilterData"
+                v-model="selectedFilterData"
                 :items="filterData"
                 item-text="title"
                 item-value="id"
@@ -57,9 +57,10 @@ export default {
         window.removeEventListener('resize', this.checkMobile);
     },
     methods: {
-        filterOut(id) { console.log(123)
+        filterOut(id) {
             this.$emit('selectedFilter', parseInt(id));
             this.selectedId = id;
+            this.selectedFilterData = this.filterData[id]
         },
         checkMobile() {
             this.isMobile = window.innerWidth <= 768
