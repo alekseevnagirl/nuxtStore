@@ -7,8 +7,8 @@
                     <div v-for="(item, id) in option.values" 
                         :key="id">
                         <div class="configurableProduct__item"
-                            :id="item.value_index"
-                            :style="{'background-color': option.attribute_code === 'color' ? item.value : '#fff'}"
+                            :id="`${productData.id}-${item.value_index}`"
+                            :style="isColor(option, item)"
                             @click="chooseOption(option, item)">
                             <p v-if="option.attribute_code === 'size'">
                                 {{ item.label }}
@@ -26,7 +26,18 @@
         data() {
             return {
                 selectedColor: null,
-                selectedSize: null
+                selectedSize: null,
+                availableColors: [],
+                availableSizes: [],
+                unavailableColors: [],
+                unavailableSizes: []
+            }
+        },
+        watch: {
+            unavailableSizes() {
+                this.unavailableSizes.forEach((id) => {
+                    document.getElementById(id).style.display = 'none';
+                })
             }
         },
         props: {
@@ -36,19 +47,81 @@
             }
         },
         methods: {
-            chooseOption(option, item) {
-                document.getElementById(item.value_index).style.border = '2px solid #ffd814';
-                if (option.attribute_code === 'color') this.selectedColor = item.value_index;
-                if (option.attribute_code === 'size') this.selectedSize = item.value_index;
+            isColor(option, item) {
+                return {
+                    'background-color': option.attribute_code === 'color' ? item.value : '#fff'
+                }
             },
-            /*chooseColor(id) {
-                let colors = document.querySelectorAll('.configurableProduct__item');
-                colors.forEach(color => {
-                    color.style.border = '1px solid #000';
+            chooseOption(option, item) {
+                // задаем айди, обнуляем массивы с доступными цветами и размерами
+                let id = this.productData.id + '-' + item.value_index;
+                this.availableColors = [];
+                this.availableSizes = [];
+                this.unavailableColors = [];
+                this.unavailableSizes = [];
+                let elements = document.querySelectorAll('.configurableProduct__item');
+                elements.forEach(elem => {
+                    elem.style.display = 'block';
                 });
-                document.getElementById(id).style.border = '2px solid #ffd814';
-                this.selectedColor = id;
-            },*/
+
+                // если уже выбран цвет/размер с таким айди, то дефолтим
+                if (this.selectedColor === id || this.selectedSize === id) {
+                    let elements = document.querySelectorAll('.configurableProduct__item');
+                    elements.forEach(elem => {
+                        elem.style.border = '1px solid #000';
+                    });
+                    this.selectedColor = null;
+                    this.selectedSize = null;
+                } else { // если этот цвет/размер еще не выбран
+                    // задаем новые значения выбранных цвета и размера
+                    if (option.attribute_code === 'color') this.selectedColor = id;
+                    if (option.attribute_code === 'size') this.selectedSize = id;
+
+                    // выделяем выбранный цвет/размер
+                    document.getElementById(id).style.border = '2px solid #ffd814';
+
+                    // заполняем массив доступных размеров
+                    this.productData.variants.forEach((variant) => {
+                        let hasColor = false;
+                        let hasSize = false;
+                        variant.attributes.forEach((attribute) => {
+                            if (attribute.code === 'color' 
+                                && this.selectedColor !== null
+                                && attribute.value_index.toString() === this.selectedColor.split('-')[1]) {
+                                hasColor = true;                                
+                            }
+                            if (attribute.code === 'size' 
+                                && this.selectedSize !== null
+                                && attribute.value_index.toString() === this.selectedSize.split('-')[1]) {
+                                    hasSize = true;                                
+                            }
+
+                            if (hasColor && attribute.code === 'size') { 
+                                let size = this.productData.id + '-' + attribute.value_index;
+                                this.availableSizes = this.availableSizes.concat(size);
+                            }
+                            if (hasSize && attribute.code === 'color') { 
+                                let color = this.productData.id + '-' + attribute.value_index;
+                                this.availableColors = this.availableColors.concat(color);
+                            }
+                        })
+                    })
+
+                    //заполняем массив недоступных размеров
+                    this.unavailableColors 
+                    this.productData.configurable_options.forEach((option) => {
+                        if (option.attribute_code === 'size') {
+                            option.values.forEach((value) => {
+                                let optionSize = this.productData.id + '-' + value.value_index
+                                if (!this.availableSizes.includes(optionSize)) 
+                                    this.unavailableSizes = this.unavailableSizes.concat(optionSize);
+                            })
+                        }
+                    })
+
+                    // дизэйблим недоступные варианты
+                }
+            }
         }
     }
 </script>
