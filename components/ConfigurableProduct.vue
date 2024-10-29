@@ -38,6 +38,11 @@
                 this.unavailableSizes.forEach((id) => {
                     document.getElementById(id).style.display = 'none';
                 })
+            },
+            unavailableColors() {
+                this.unavailableColors.forEach((id) => {
+                    document.getElementById(id).style.display = 'none';
+                })
             }
         },
         props: {
@@ -77,45 +82,70 @@
                     // выделяем выбранный цвет/размер
                     document.getElementById(id).style.border = '2px solid #ffd814';
 
-                    // заполняем массив доступных размеров
+                    // заполняем массив доступных размеров и цветов
                     this.productData.variants.forEach((variant) => {
-                        let hasColor = false;
-                        let hasSize = false;
-                        variant.attributes.forEach((attribute) => {
-                            if (attribute.code === 'color' 
-                                && this.selectedColor !== null
-                                && attribute.value_index.toString() === this.selectedColor.split('-')[1]) {
-                                hasColor = true;                                
-                            }
-                            if (attribute.code === 'size' 
+                        let isColor = false;
+                        let isSize = false;
+
+                        isColor = variant.attributes.find((attribute) => {
+                            return attribute.code === 'color' 
+                                && this.selectedColor !== null 
+                                && attribute.value_index.toString() === this.selectedColor.split('-')[1];
+                        }) !== undefined;
+
+                        if (isColor) {
+                            variant.attributes.forEach((attribute) => {
+                                if (attribute.code === 'size') {
+                                    let size = this.productData.id + '-' + attribute.value_index;
+                                    this.availableSizes = this.availableSizes.concat(size);
+                                }
+                            });
+                        }
+
+                        isSize = variant.attributes.find((attribute) => {
+                            return attribute.code === 'size' 
                                 && this.selectedSize !== null
-                                && attribute.value_index.toString() === this.selectedSize.split('-')[1]) {
-                                    hasSize = true;                                
-                            }
+                                && attribute.value_index.toString() === this.selectedSize.split('-')[1]
+                        }) !== undefined;
 
-                            if (hasColor && attribute.code === 'size') { 
-                                let size = this.productData.id + '-' + attribute.value_index;
-                                this.availableSizes = this.availableSizes.concat(size);
-                            }
-                            if (hasSize && attribute.code === 'color') { 
-                                let color = this.productData.id + '-' + attribute.value_index;
-                                this.availableColors = this.availableColors.concat(color);
-                            }
-                        })
-                    })
-
-                    //заполняем массив недоступных размеров
-                    this.unavailableColors 
-                    this.productData.configurable_options.forEach((option) => {
-                        if (option.attribute_code === 'size') {
-                            option.values.forEach((value) => {
-                                let optionSize = this.productData.id + '-' + value.value_index
-                                if (!this.availableSizes.includes(optionSize)) 
-                                    this.unavailableSizes = this.unavailableSizes.concat(optionSize);
+                        if (isSize) {
+                            variant.attributes.forEach((attribute) => {
+                                if (attribute.code === 'color') { 
+                                    let color = this.productData.id + '-' + attribute.value_index;
+                                    this.availableColors = this.availableColors.concat(color);
+                                }
                             })
                         }
                     })
 
+                    //заполняем массив недоступных размеров
+                    if (option.attribute_code === 'color') {
+                        this.productData.configurable_options.forEach((option) => {
+                            if (option.attribute_code === 'size') {
+                                option.values.forEach((value) => {
+                                    let optionSize = this.productData.id + '-' + value.value_index
+                                    if (!this.availableSizes.includes(optionSize)) 
+                                        this.unavailableSizes = this.unavailableSizes.concat(optionSize);
+                                })
+                                this.unavailableColors = [];
+                            }
+                        })
+                    }
+
+                    //заполняем массив недоступных цветов
+                    if (option.attribute_code === 'size') {
+                        this.productData.configurable_options.forEach((option) => {
+                            if (option.attribute_code === 'color') {
+                                option.values.forEach((value) => {
+                                    let optionColor = this.productData.id + '-' + value.value_index
+                                    if (!this.availableColors.includes(optionColor)) 
+                                        this.unavailableColors = this.unavailableColors.concat(optionColor);
+                                })
+                                this.unavailableSizes = [];
+                            }
+                        })
+                    }
+                    
                     // дизэйблим недоступные варианты
                 }
             }
