@@ -53,7 +53,7 @@
                 }
             },
             chooseOption(option, item) {
-                // задаем айди, обнуляем массивы с доступными цветами и размерами
+                // задаем айди, приводим к дефолтным значениям и стилям
                 let id = this.productData.id + '-' + item.value_index;
                 this.availableColors = [];
                 this.availableSizes = [];
@@ -62,14 +62,11 @@
                 let elements = document.querySelectorAll('.configurableProduct__item');
                 elements.forEach(elem => {
                     elem.style.display = 'block';
+                    elem.style.border = '1px solid #000';
                 });
 
                 // если уже выбран цвет/размер с таким айди, то дефолтим
                 if (this.selectedColor === id || this.selectedSize === id) {
-                    let elements = document.querySelectorAll('.configurableProduct__item');
-                    elements.forEach(elem => {
-                        elem.style.border = '1px solid #000';
-                    });
                     this.selectedColor = null;
                     this.selectedSize = null;
                 } else { // если этот цвет/размер еще не выбран
