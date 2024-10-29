@@ -3,7 +3,7 @@
         <v-img
             :width="250"
             cover
-            :src="productData.image"
+            :src="imageSrc === '' ? productData.image : imageSrc"
         ></v-img>
 
         <v-card-title>
@@ -31,6 +31,10 @@
             productData: {
                 type: Object,
                 default: {}
+            },
+            imageSrc: {
+                type: String,
+                default: ''
             }
         },
         computed: {

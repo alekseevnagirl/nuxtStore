@@ -1,5 +1,6 @@
 <template>
-    <SimpleProduct :productData="productData">
+    <SimpleProduct :productData="productData"
+        :imageSrc="imageSrc">
         <div class="configurableProduct__wrapper">
             <div v-for="(option, optionId) in productData.configurable_options"
                 :key="optionId">
@@ -30,7 +31,8 @@
                 availableColors: [],
                 availableSizes: [],
                 unavailableColors: [],
-                unavailableSizes: []
+                unavailableSizes: [],
+                imageSrc: ''
             }
         },
         watch: {
@@ -74,9 +76,25 @@
                 if (this.selectedColor === id || this.selectedSize === id) {
                     this.selectedColor = null;
                     this.selectedSize = null;
-                } else { // если этот цвет/размер еще не выбран
+                    this.imageSrc = '';
+                } else { 
+                    // если этот цвет/размер еще не выбран
                     // задаем новые значения выбранных цвета и размера
-                    if (option.attribute_code === 'color') this.selectedColor = id;
+                    if (option.attribute_code === 'color') { 
+                        this.selectedColor = id;
+
+                        // меняем картинку товара в зависимости от цвета
+                        let selectedVariant = 0;
+                        this.productData.variants.forEach((variant) => {
+                            variant.attributes.forEach((attribute, idAttribute) => {
+                                if (attribute.code === 'color' 
+                                    && this.selectedColor === this.productData.id + '-' + attribute.value_index) {
+                                    selectedVariant = idAttribute;
+                                }
+                            })
+                        })
+                        this.imageSrc = this.productData.variants[selectedVariant].product.image;
+                    }
                     if (option.attribute_code === 'size') this.selectedSize = id;
 
                     // выделяем выбранный цвет/размер
@@ -145,7 +163,7 @@
                             }
                         })
                     }
-                    
+
                     // дизэйблим недоступные варианты
                 }
             }
