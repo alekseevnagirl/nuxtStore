@@ -1,24 +1,19 @@
 <template>
     <SimpleProduct :productData="productData">
         <div class="configurableProduct__wrapper">
-            <div class="configurableProduct__items__wrapper">
-                <div v-for="(item, id) in productData.configurable_options[0].values" 
-                    :key="id">
-                    <div class="configurableProduct__color"
-                        :id="`color-${item.value_index}`"
-                        :style="`background-color: ${item.value}`"
-                        @click="chooseColor(`color-${item.value_index}`)">
-                    </div>
-                </div>
-            </div>
-
-            <div class="configurableProduct__items__wrapper">
-                <div v-for="(item, id) in productData.configurable_options[1].values" 
-                    :key="id">
-                    <div class="configurableProduct__size"
-                        :id="`size-${item.value_index}`"
-                        @click="chooseSize(`size-${item.value_index}`)">
-                        {{ item.label }}
+            <div v-for="(option, optionId) in productData.configurable_options"
+                :key="optionId">
+                <div class="configurableProduct__items__wrapper">
+                    <div v-for="(item, id) in option.values" 
+                        :key="id">
+                        <div class="configurableProduct__item"
+                            :id="item.value_index"
+                            :style="{'background-color': option.attribute_code === 'color' ? item.value : '#fff'}"
+                            @click="chooseOption(option, item)">
+                            <p v-if="option.attribute_code === 'size'">
+                                {{ item.label }}
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -41,22 +36,19 @@
             }
         },
         methods: {
-            chooseColor(id) {
-                let colors = document.querySelectorAll('.configurableProduct__color');
+            chooseOption(option, item) {
+                document.getElementById(item.value_index).style.border = '2px solid #ffd814';
+                if (option.attribute_code === 'color') this.selectedColor = item.value_index;
+                if (option.attribute_code === 'size') this.selectedSize = item.value_index;
+            },
+            /*chooseColor(id) {
+                let colors = document.querySelectorAll('.configurableProduct__item');
                 colors.forEach(color => {
                     color.style.border = '1px solid #000';
                 });
                 document.getElementById(id).style.border = '2px solid #ffd814';
                 this.selectedColor = id;
-            },
-            chooseSize(id) {
-                let sizes = document.querySelectorAll('.configurableProduct__size');
-                sizes.forEach(size => {
-                    size.style.border = '1px solid #000';
-                });
-                document.getElementById(id).style.border = '2px solid #ffd814';
-                this.selectedSize = id;
-            }
+            },*/
         }
     }
 </script>
@@ -72,14 +64,14 @@
         display: flex;
         gap: 5px;
     }
-    .configurableProduct__color, .configurableProduct__size {
+    .configurableProduct__item {
         width: 30px;
         height: 20px;
         border: 1px solid #000;
         text-align: center;
         font-size: 14px;
     }
-    .configurableProduct__color:hover, .configurableProduct__size:hover {
+    .configurableProduct__item:hover {
         cursor: pointer;
     }
 </style>
