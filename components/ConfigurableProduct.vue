@@ -112,6 +112,13 @@
                 } 
                 else { 
                     // если этот цвет/размер еще не выбран
+                    // снимаем выделение если до этого был тоже цвет/размер
+                    if (this.selectedColor !== null && this.selectedColor.split('-')[1] === option.attribute_code)
+                        document.getElementById(this.selectedColor).style.border = '1px solid #000';
+
+                    if (this.selectedSize !== null && this.selectedSize.split('-')[1] === option.attribute_code)
+                        document.getElementById(this.selectedSize).style.border = '1px solid #000';
+
                     // задаем новые значения выбранных цвета и размера
                     if (option.attribute_code === 'color') { 
                         this.selectedColor = id;
