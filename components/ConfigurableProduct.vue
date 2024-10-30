@@ -80,13 +80,35 @@
                     if (this.selectedColor === id) {
                         this.selectedColor = null;
                         this.imageSrc = '';
+                        // убираем недоступные размеры
+                        this.productData.variants.forEach((variant) => {
+                            variant.attributes.forEach((attribute) => {
+                                if (attribute.code === 'size') {
+                                    let size = this.productData.id + '-' + attribute.code + '-' + attribute.value_index;
+                                    document.getElementById(size).style.pointerEvents = 'auto';
+                                    document.getElementById(size).querySelector('.configurableProduct__item__none').style.display = 'none';
+                                }
+                            });
+                        })
                     }
-                    if (this.selectedSize === id) this.selectedSize = null;
+                    if (this.selectedSize === id) {
+                        this.selectedSize = null;
+                        
+                        // убираем недоступные цвета
+                        this.productData.variants.forEach((variant) => {
+                            variant.attributes.forEach((attribute) => {
+                                if (attribute.code === 'color') {
+                                    let color = this.productData.id + '-' + attribute.code + '-' + attribute.value_index;
+                                    document.getElementById(color).style.pointerEvents = 'auto';
+                                    document.getElementById(color).querySelector('.configurableProduct__item__none').style.display = 'none';
+                                }
+                            });
+                        })
+                    }
 
+                    // снимаем выделение с него
                     let element = document.getElementById(id);
                     element.style.border = '1px solid #000';
-                    element.style.pointerEvents = 'auto';
-                    element.querySelector('.configurableProduct__item__none').style.display = 'none';
                 } 
                 else { 
                     // если этот цвет/размер еще не выбран
