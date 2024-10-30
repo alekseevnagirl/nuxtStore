@@ -68,6 +68,7 @@
                 }
             },
             chooseOption(option, item) {
+                //debugger
                 // задаем айди, приводим к дефолтным значениям и стилям
                 let id = this.productData.id + '-' + option.attribute_code + '-' + item.value_index;
                 this.availableColors = [];
@@ -76,20 +77,14 @@
                 // если уже выбран цвет/размер с таким айди
                 if (this.selectedColor === id || this.selectedSize === id) {
                     if (this.selectedColor === id) {
-                        this.selectedColor = null;
                         this.imageSrc = '';
-                        // убираем недоступные размеры
                         this.deleteUnavailableSizes();
+                        this.selectedColor = null;
                     }
                     if (this.selectedSize === id) {
-                        this.selectedSize = null;
-                        
-                        // убираем недоступные цвета
                         this.deleteUnavailableColors();
+                        this.selectedSize = null;
                     }
-
-                    this.unavailableSizes = [];
-                    this.unavailableColors = [];
 
                     // снимаем выделение с него
                     document.getElementById(id).style.border = '1px solid #000';
@@ -125,7 +120,6 @@
                                 this.selectedColor === this.productData.id + '-' + option.attribute_code + '-' + attribute.value_index;
                         });
                     });
-
                     if (selectedVariant) {
                         this.imageSrc = selectedVariant.product.image;
                     }
@@ -177,12 +171,12 @@
                                 if (!this.availableSizes.includes(optionSize)) 
                                     this.unavailableSizes = this.unavailableSizes.concat(optionSize);
                             })
-                            this.unavailableColors = [];
                         }
                     })
                 }
 
                 //заполняем массив недоступных цветов
+                console.log(1, this.unavailableSizes)
                 if (option.attribute_code === 'size') {
                     this.productData.configurable_options.forEach((option) => {
                         if (option.attribute_code === 'color') {
@@ -191,10 +185,10 @@
                                 if (!this.availableColors.includes(optionColor)) 
                                     this.unavailableColors = this.unavailableColors.concat(optionColor);
                             })
-                            this.unavailableSizes = [];
                         }
                     })
                 }
+                console.log(2, this.unavailableSizes)
             },
             deleteUnavailableColors() { // убираем крестик с недоступных цветов
                 this.unavailableColors.forEach((color) => {
