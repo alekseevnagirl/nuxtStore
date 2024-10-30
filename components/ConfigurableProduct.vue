@@ -81,19 +81,19 @@
                     // если этот цвет/размер еще не выбран
                     // задаем новые значения выбранных цвета и размера
                     if (option.attribute_code === 'color') { 
-                        this.selectedColor = id;
+                        this.selectedColor = id;debugger
 
                         // меняем картинку товара в зависимости от цвета
-                        let selectedVariant = 0;
-                        this.productData.variants.forEach((variant) => {
-                            variant.attributes.forEach((attribute, idAttribute) => {
-                                if (attribute.code === 'color' 
-                                    && this.selectedColor === this.productData.id + '-' + attribute.value_index) {
-                                    selectedVariant = idAttribute;
-                                }
-                            })
-                        })
-                        this.imageSrc = this.productData.variants[selectedVariant].product.image;
+                        let selectedVariant = this.productData.variants.find((variant) => {
+                            return variant.attributes.some((attribute) => {
+                                return attribute.code === 'color' && 
+                                    this.selectedColor === this.productData.id + '-' + attribute.value_index;
+                            });
+                        });
+
+                        if (selectedVariant) {
+                            this.imageSrc = selectedVariant.product.image;
+                        }
                     }
                     if (option.attribute_code === 'size') this.selectedSize = id;
 
