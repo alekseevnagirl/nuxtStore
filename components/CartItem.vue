@@ -4,7 +4,7 @@
             <div class="cartItem__image__wrapper">
                 <v-img
                     cover
-                    :src="cartItemData.image"
+                    :src="cartItemData?.variant?.product?.image === undefined ? cartItemData.image : cartItemData.variant.product.image"
                     class="cartItem__image"
                 ></v-img>
             </div>
@@ -14,9 +14,13 @@
                     <div class="cartItem__brand">
                         {{ cartItemData.brandName }} / {{ cartItemData.title }}
                     </div>
-                    <div class="cartItem__color__size">
-                        Color: black
-                        Size: L
+                    <div v-if="cartItemData.variant"
+                        class="cartItem__color__size">
+                        Color: {{ cartItemData?.variant?.product?.sku.split('-')[1] }}
+                    </div>
+                    <div v-if="cartItemData.variant"
+                        class="cartItem__color__size">
+                        Size: {{ cartItemData?.variant?.product?.sku.split('-')[2].toUpperCase() }}
                     </div>
                 </div>
 
@@ -117,7 +121,8 @@
     }
     .cartItem__color__size {
         display: flex;
-        font-size: 14px;
+        font-size: 14px !important;
+        padding: 0 0 0 5px !important;
     }
     .cartItem__image {
         width: 150px;
@@ -171,6 +176,9 @@
         }
         .cartItem__quantity {
             width: 70px;
+        }
+        .cartItem__brand, .cartItem__color__size {
+            padding-left: 0 !important; 
         }
     }
 </style>
