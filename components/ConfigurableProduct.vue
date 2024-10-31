@@ -37,7 +37,8 @@
                 availableSizes: [],
                 unavailableColors: [],
                 unavailableSizes: [],
-                imageSrc: ''
+                imageSrc: '',
+                currentVariantData: {}
             }
         },
         watch: {
@@ -65,7 +66,7 @@
         methods: {
             isColor(option, item) {
                 return {
-                    'background-color': option.attribute_code === 'color' ? item.value : '#fff'
+                    'background-color': option.attribute_code === 'color' ? item.value : '#fff',
                 }
             },
             chooseOption(option, item) {

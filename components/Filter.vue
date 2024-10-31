@@ -7,8 +7,7 @@
                 item-text="title"
                 item-value="id"
                 return-object
-                @update:model-value="filterOut(selectedFilterData.id)">
-            </v-select>
+            />
         </div>
 
         <div v-else>
@@ -32,7 +31,6 @@ export default {
         return {
             isMobile: false,
             selectedId: 0,
-            selectedFilterData: null
         }
     },
     props: {
@@ -41,17 +39,19 @@ export default {
             default: {}
         }
     },
-    watch: {
-        filterData(newValue) {
-            if (newValue.length > 0) {
-                this.selectedFilterData = newValue[this.selectedId];
-            }
+    computed: {
+        selectedFilterData: {
+            get(){
+                    return this.filterData[this.selectedId]
+                },
+                set({id}){
+                    this.selectedId = id
+                }
         }
     },
     mounted() {
         this.checkMobile()
         window.addEventListener('resize', this.checkMobile);
-        this.selectedFilterData = this.filterData[this.selectedId]
     },
     beforeDestroy() {
         window.removeEventListener('resize', this.checkMobile);
@@ -60,7 +60,6 @@ export default {
         filterOut(id) {
             this.$emit('selectedFilter', parseInt(id));
             this.selectedId = id;
-            this.selectedFilterData = this.filterData[id]
         },
         checkMobile() {
             this.isMobile = window.innerWidth <= 768

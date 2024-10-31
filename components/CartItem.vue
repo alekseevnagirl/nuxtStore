@@ -35,8 +35,7 @@
                         min="1"
                         hide-details
                         class="cartItem__quantity"
-                        :value="cartItemData.quantity"
-                        @change="changeQuantity($event.target.value, cartItemData)">
+                        v-model="quantity">
                     </v-text-field>
                 </div>
 
@@ -54,7 +53,13 @@
 </template>
 
 <script>
+    import deepClone from 'lodash.clonedeep'
     export default {
+        data() {
+            return {
+                currentItem: {}
+            }
+        },
         props: {
             cartItemData: {
                 type: Object,
@@ -69,15 +74,23 @@
             total() {
                 let totalPrice = (this.cartItemData?.regular_price?.value * this.cartItemData.quantity).toFixed(2)
                 return totalPrice
+            },
+            quantity: {
+                get() {
+                    return this.cartItemData.quantity
+                },
+                set(quant) {
+                    this.currentItem.quantity = parseInt(quant);
+                    this.$store.commit('updateCart', this.currentItem)
+                }
             }
+        },
+        mounted() {
+            this.currentItem = deepClone(this.cartItemData); 
         },
         methods: {
             deleteFromCart(id) {
                 this.$store.commit("deleteFromCart", id)
-            },
-            changeQuantity(quantity, item) {
-                item.quantity = parseInt(quantity);
-                this.$store.commit('updateCart', item)
             }
         }
     }
