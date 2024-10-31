@@ -37,8 +37,7 @@
                 availableSizes: [],
                 unavailableColors: [],
                 unavailableSizes: [],
-                imageSrc: '',
-                selectedVariant: 0
+                imageSrc: ''
             }
         },
         watch: {
@@ -90,13 +89,13 @@
                     document.getElementById(id).style.border = '1px solid #000';
                 } 
                 else if (this.selectedColor !== null && this.selectedColor.split('-')[1] === option.attribute_code) {
-                    // если опять выбран цвет
+                    // если опять выбран цвет, но с другим айди
                     document.getElementById(this.selectedColor).style.border = '1px solid #000';
                     this.deleteUnavailableSizes();
                     this.changeOptionData(id, option, item)
                 }
                 else if (this.selectedSize !== null && this.selectedSize.split('-')[1] === option.attribute_code) {
-                    // если опять выбран размер
+                    // если опять выбран размер, но с другим айди
                     document.getElementById(this.selectedSize).style.border = '1px solid #000';
                     this.deleteUnavailableColors();
                     this.changeOptionData(id, option, item)
@@ -202,21 +201,20 @@
                 })
                 this.unavailableSizes = []
             },
-            changeBeforeAdd() {
+            changeBeforeAdd() { // перед добавлением в хранилище добавляем вариант опций
                 this.productData.variants.forEach((variant) => {
-                    let hasSameColor = false
-                    variant.attributes.forEach((attribute) => {
-                        if (attribute.code === 'color' 
-                            && attribute.value_index.toString() === this.selectedColor.split('-')[2]) 
-                            {
-                                hasSameColor = true;
-                            }
-                        if (attribute.code === 'size'
-                            && attribute.value_index.toString() === this.selectedSize.split('-')[2]
-                            && hasSameColor) {
-                                this.productData.variant = variant;
-                        }
+                    let hasSameColor = variant.attributes.find((attribute) => {
+                        return attribute.code === 'color'
+                            && attribute.value_index.toString() === this.selectedColor.split('-')[2]
                     })
+                    if (hasSameColor) {
+                        variant.attributes.forEach((attribute) => {
+                            if (attribute.code === 'size'
+                                && attribute.value_index.toString() === this.selectedSize.split('-')[2]) {
+                                    this.productData.variant = variant;
+                            }
+                        })
+                    }
                 })
             }
         }
