@@ -49,6 +49,7 @@
         },
         methods: {
             addProduct() {
+                this.$emit('changeBeforeAdd', this.productData)
                 this.$store.commit("addToCart", this.productData)
             }
         }

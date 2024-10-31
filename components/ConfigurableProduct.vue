@@ -1,6 +1,7 @@
 <template>
     <SimpleProduct :productData="productData"
-        :imageSrc="imageSrc">
+        :imageSrc="imageSrc"
+        @changeBeforeAdd="changeBeforeAdd">
         <div class="configurableProduct__wrapper">
             <div v-for="(option, optionId) in productData.configurable_options"
                 :key="optionId">
@@ -36,7 +37,8 @@
                 availableSizes: [],
                 unavailableColors: [],
                 unavailableSizes: [],
-                imageSrc: ''
+                imageSrc: '',
+                selectedVariant: 0
             }
         },
         watch: {
@@ -68,14 +70,12 @@
                 }
             },
             chooseOption(option, item) {
-                //debugger
-                // задаем айди, приводим к дефолтным значениям и стилям
                 let id = this.productData.id + '-' + option.attribute_code + '-' + item.value_index;
                 this.availableColors = [];
                 this.availableSizes = [];
 
-                // если уже выбран цвет/размер с таким айди
                 if (this.selectedColor === id || this.selectedSize === id) {
+                    // если уже выбран цвет/размер с таким айди
                     if (this.selectedColor === id) {
                         this.imageSrc = '';
                         this.deleteUnavailableSizes();
@@ -176,7 +176,6 @@
                 }
 
                 //заполняем массив недоступных цветов
-                console.log(1, this.unavailableSizes)
                 if (option.attribute_code === 'size') {
                     this.productData.configurable_options.forEach((option) => {
                         if (option.attribute_code === 'color') {
@@ -188,7 +187,6 @@
                         }
                     })
                 }
-                console.log(2, this.unavailableSizes)
             },
             deleteUnavailableColors() { // убираем крестик с недоступных цветов
                 this.unavailableColors.forEach((color) => {
@@ -203,6 +201,23 @@
                     document.getElementById(size).querySelector('.configurableProduct__item__none').style.display = 'none';
                 })
                 this.unavailableSizes = []
+            },
+            changeBeforeAdd() {
+                this.productData.variants.forEach((variant) => {
+                    let hasSameColor = false
+                    variant.attributes.forEach((attribute) => {
+                        if (attribute.code === 'color' 
+                            && attribute.value_index.toString() === this.selectedColor.split('-')[2]) 
+                            {
+                                hasSameColor = true;
+                            }
+                        if (attribute.code === 'size'
+                            && attribute.value_index.toString() === this.selectedSize.split('-')[2]
+                            && hasSameColor) {
+                                this.productData.variant = variant;
+                        }
+                    })
+                })
             }
         }
     }

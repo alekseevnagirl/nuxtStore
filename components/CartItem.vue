@@ -10,8 +10,14 @@
             </div>
             
             <div class="cartItem__info__wrapper">
-                <div class="cartItem__brand">
-                    {{ cartItemData.brandName }} / {{ cartItemData.title }}
+                <div class="cartItem__info__characteristics">
+                    <div class="cartItem__brand">
+                        {{ cartItemData.brandName }} / {{ cartItemData.title }}
+                    </div>
+                    <div class="cartItem__color__size">
+                        Color: black
+                        Size: L
+                    </div>
                 </div>
 
                 <div class="cartItem__price">
@@ -102,10 +108,16 @@
         -webkit-box-orient: vertical;
         overflow: hidden;
     }
+    .cartItem__info__characteristics {
+        flex: 1 1 40% !important;
+    }
     .cartItem__brand {
         display: flex;
         align-items: center;
-        flex: 1 1 40% !important;
+    }
+    .cartItem__color__size {
+        display: flex;
+        font-size: 14px;
     }
     .cartItem__image {
         width: 150px;
@@ -145,7 +157,7 @@
             width: 150px;
             height: 150px;
         }
-        .cartItem__brand {
+        .cartItem__info__characteristics {
             flex: 1 1 60% !important;
         }
         .cartItem__price::before {

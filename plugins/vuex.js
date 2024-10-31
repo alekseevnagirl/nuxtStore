@@ -1,4 +1,5 @@
 import { createStore } from "vuex";
+import deepClone from 'lodash.clonedeep'
 
 const store = createStore({
   state() {
@@ -7,15 +8,26 @@ const store = createStore({
     };
   },
   mutations: {
-    addToCart(state, product) {
-        let checkSame = 0;
-        state.cart.forEach((item) => { //some
-            if (item.id === product.id) { 
-                item.quantity = item.quantity + 1
-                checkSame = 1;
-            }
-        })
-        if (checkSame === 0) state.cart.push(product)
+    addToCart(state, product) { 
+      let isProductInCart = state.cart.some((item) => { 
+        if (item.variant !== undefined && item.id === product.id && item.variant.product.id === product.variant.product.id) {
+          item.quantity += 1;
+          return true;
+        }
+        else if (item.variant === undefined && item.id === product.id) {
+          item.quantity += 1;
+          return true;
+        } else {
+          return false;
+        }
+      });
+      
+      if (!isProductInCart) {
+        let cartProduct = deepClone(product); 
+        delete cartProduct.configurable_options;
+        delete cartProduct.variants;
+        state.cart.push(cartProduct);
+      }
     },
     deleteFromCart(state, productId) {
         let index = state.cart.findIndex((item) => item.id === productId);
