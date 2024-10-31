@@ -23,9 +23,6 @@ const store = createStore({
       });
       
       if (!isProductInCart) {
-        let cartProduct = deepClone(product); 
-        delete cartProduct.configurable_options;
-        delete cartProduct.variants;
         state.cart.push(cartProduct);
       }
     },

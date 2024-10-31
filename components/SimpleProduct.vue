@@ -26,6 +26,7 @@
 </template>
 
 <script>
+    import deepClone from 'lodash.clonedeep'
     export default {
         props: {
             productData: {

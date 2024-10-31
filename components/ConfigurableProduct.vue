@@ -1,6 +1,7 @@
 <template>
     <SimpleProduct :productData="productData"
         :imageSrc="imageSrc"
+        :storeData="currentVariant"
         @changeBeforeAdd="changeBeforeAdd">
         <div class="configurableProduct__wrapper">
             <div v-for="(option, optionId) in productData.configurable_options"
@@ -28,6 +29,7 @@
 </template>
 
 <script>
+    import deepClone from 'lodash.clonedeep'
     export default {
         data() {
             return {
@@ -38,7 +40,7 @@
                 unavailableColors: [],
                 unavailableSizes: [],
                 imageSrc: '',
-                currentVariantData: {}
+                currentVariant: {}
             }
         },
         watch: {
@@ -203,6 +205,7 @@
                 this.unavailableSizes = []
             },
             changeBeforeAdd() { // перед добавлением в хранилище добавляем вариант опций
+                this.currentVariant = deepClone(this.productData);
                 this.productData.variants.forEach((variant) => {
                     let hasSameColor = variant.attributes.find((attribute) => {
                         return attribute.code === 'color'
@@ -212,11 +215,13 @@
                         variant.attributes.forEach((attribute) => {
                             if (attribute.code === 'size'
                                 && attribute.value_index.toString() === this.selectedSize.split('-')[2]) {
-                                    this.productData.variant = variant;
+                                    this.currentVariant.variant = variant;
                             }
                         })
                     }
                 })
+                delete this.currentVariant.configurable_options;
+                delete this.currentVariant.variants;
             }
         }
     }
