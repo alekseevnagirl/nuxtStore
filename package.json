@@ -18,11 +18,10 @@
     "nuxt": "^3.13.2",
     "vue": "latest",
     "vue-router": "latest",
+    "vuetify-nuxt-module": "^0.18.3",
     "vuex": "^4.0.2"
   },
   "devDependencies": {
-    "sass": "^1.80.3",
-    "vite-plugin-vuetify": "^2.0.4",
-    "vuetify": "^3.7.3"
+    "sass": "^1.80.3"
   }
 }
