@@ -45,7 +45,7 @@ export default {
                     return this.filterData[this.selectedId]
                 },
                 set({id}){
-                    this.selectedId = id
+                    this.filterOut(id)
                 }
         }
     },
