@@ -30,9 +30,12 @@ const store = createStore({
       let index = state.cart.findIndex((item) => 
         (item.variant !== undefined && item.id === product.id && item.variant.product.id === product.variant.product.id) 
         || (item.variant === undefined && item.id === product.id));
-      state.cart[index].quantity = 1;
-      state.cart = state.cart.filter((item) => (item.variant !== undefined && item.id === product.id && item.variant.product.id !== product.variant.product.id) 
-      || (item.variant === undefined && item.id !== product.id));
+      //state.cart[index].quantity = 1
+
+      state.cart = state.cart.filter((item, itemId) => itemId !== index
+        /*(item.variant !== undefined && item.id === product.id && item.variant.product.id !== product.variant.product.id) 
+        || (item.variant === undefined && item.id !== product.id)*/
+      );
     },
     updateCart(state, product) {
       let index = state.cart.findIndex((item) => 

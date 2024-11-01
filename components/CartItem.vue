@@ -55,11 +55,6 @@
 <script>
     import deepClone from 'lodash.clonedeep'
     export default {
-        data() {
-            return {
-                currentItem: {}
-            }
-        },
         props: {
             cartItemData: {
                 type: Object,
@@ -80,17 +75,16 @@
                     return this.cartItemData.quantity
                 },
                 set(quant) {
-                    this.currentItem.quantity = parseInt(quant);
-                    this.$store.commit('updateCart', this.currentItem)
+                    let currentItem = deepClone(this.cartItemData); 
+                    currentItem.quantity = parseInt(quant);
+                    this.$store.commit('updateCart', currentItem)
                 }
             }
         },
-        mounted() {
-            this.currentItem = deepClone(this.cartItemData); 
-        },
         methods: {
-            deleteFromCart(id) {
-                this.$store.commit("deleteFromCart", this.currentItem)
+            deleteFromCart() {
+                let currentItem = deepClone(this.cartItemData); 
+                this.$store.commit("deleteFromCart", currentItem)
             }
         }
     }
