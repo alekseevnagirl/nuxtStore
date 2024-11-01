@@ -1,8 +1,8 @@
 <template>
     <SimpleProduct :productData="productData"
         :imageSrc="imageSrc"
-        :storeData="currentVariant"
-        @changeBeforeAdd="changeBeforeAdd">
+        :selectedColor="selectedColor"
+        :selectedSize="selectedSize">
         <div class="configurableProduct__wrapper">
             <div v-for="(option, optionId) in productData.configurable_options"
                 :key="optionId">
@@ -39,8 +39,7 @@
                 availableSizes: [],
                 unavailableColors: [],
                 unavailableSizes: [],
-                imageSrc: '',
-                currentVariant: {}
+                imageSrc: ''
             }
         },
         watch: {
@@ -203,25 +202,6 @@
                     document.getElementById(size).querySelector('.configurableProduct__item__none').style.display = 'none';
                 })
                 this.unavailableSizes = []
-            },
-            changeBeforeAdd() { // перед добавлением в хранилище добавляем вариант опций
-                this.currentVariant = deepClone(this.productData);
-                this.productData.variants.forEach((variant) => {
-                    let hasSameColor = variant.attributes.find((attribute) => {
-                        return attribute.code === 'color'
-                            && attribute.value_index.toString() === this.selectedColor.split('-')[2]
-                    })
-                    if (hasSameColor) {
-                        variant.attributes.forEach((attribute) => {
-                            if (attribute.code === 'size'
-                                && attribute.value_index.toString() === this.selectedSize.split('-')[2]) {
-                                    this.currentVariant.variant = variant;
-                            }
-                        })
-                    }
-                })
-                delete this.currentVariant.configurable_options;
-                delete this.currentVariant.variants;
             }
         }
     }

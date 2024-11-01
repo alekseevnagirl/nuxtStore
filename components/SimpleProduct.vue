@@ -28,6 +28,11 @@
 <script>
     import deepClone from 'lodash.clonedeep'
     export default {
+        data() {
+            return {
+                currentVariant: {}
+            }
+        },
         props: {
             productData: {
                 type: Object,
@@ -36,6 +41,14 @@
             imageSrc: {
                 type: String,
                 default: ''
+            },
+            selectedColor: {
+                type: String,
+                default: null
+            },
+            selectedSize: {
+                type: String,
+                default: null
             }
         },
         computed: {
@@ -50,8 +63,28 @@
         },
         methods: {
             addProduct() {
-                this.$emit('changeBeforeAdd', this.productData)
-                this.$store.commit("addToCart", this.productData)
+                // перед добавлением в хранилище добавляем вариант опций
+                this.currentVariant = deepClone(this.productData);
+                if (this.productData.variants) {
+                    this.productData.variants.forEach((variant) => {
+                        let hasSameColor = variant.attributes.find((attribute) => {
+                            return attribute.code === 'color'
+                                && attribute.value_index.toString() === this.selectedColor.split('-')[2]
+                        })
+                        if (hasSameColor) {
+                            variant.attributes.forEach((attribute) => {
+                                if (attribute.code === 'size'
+                                    && attribute.value_index.toString() === this.selectedSize.split('-')[2]) {
+                                        this.currentVariant.variant = variant;
+                                }
+                            })
+                        }
+                    })
+                    delete this.currentVariant.configurable_options;
+                    delete this.currentVariant.variants;
+                }
+                
+                this.$store.commit("addToCart", this.currentVariant)
             }
         }
     }

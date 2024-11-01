@@ -23,7 +23,7 @@ const store = createStore({
       });
       
       if (!isProductInCart) {
-        state.cart.push(cartProduct);
+        state.cart.push(product);
       }
     },
     deleteFromCart(state, productId) {
