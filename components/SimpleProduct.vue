@@ -28,11 +28,6 @@
 <script>
     import deepClone from 'lodash.clonedeep'
     export default {
-        data() {
-            return {
-                currentVariant: {}
-            }
-        },
         props: {
             productData: {
                 type: Object,
@@ -64,7 +59,7 @@
         methods: {
             addProduct() {
                 // перед добавлением в хранилище добавляем вариант опций
-                this.currentVariant = deepClone(this.productData);
+                let currentVariant = deepClone(this.productData);
                 if (this.productData.variants) {
                     this.productData.variants.forEach((variant) => {
                         let hasSameColor = variant.attributes.find((attribute) => {
@@ -75,16 +70,16 @@
                             variant.attributes.forEach((attribute) => {
                                 if (attribute.code === 'size'
                                     && attribute.value_index.toString() === this.selectedSize.split('-')[2]) {
-                                        this.currentVariant.variant = variant;
+                                        currentVariant.variant = variant;
                                 }
                             })
                         }
                     })
-                    delete this.currentVariant.configurable_options;
-                    delete this.currentVariant.variants;
+                    delete currentVariant.configurable_options;
+                    delete currentVariant.variants;
                 }
                 
-                this.$store.commit("addToCart", this.currentVariant)
+                this.$store.commit("addToCart", currentVariant)
             }
         }
     }

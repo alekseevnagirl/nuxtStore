@@ -26,13 +26,18 @@ const store = createStore({
         state.cart.push(product);
       }
     },
-    deleteFromCart(state, productId) {
-        let index = state.cart.findIndex((item) => item.id === productId);
-        state.cart[index].quantity = 1;
-        state.cart = state.cart.filter((product) => product.id !== productId)
+    deleteFromCart(state, product) {
+      let index = state.cart.findIndex((item) => 
+        (item.variant !== undefined && item.id === product.id && item.variant.product.id === product.variant.product.id) 
+        || (item.variant === undefined && item.id === product.id));
+      state.cart[index].quantity = 1;
+      state.cart = state.cart.filter((item) => (item.variant !== undefined && item.id === product.id && item.variant.product.id !== product.variant.product.id) 
+      || (item.variant === undefined && item.id !== product.id));
     },
     updateCart(state, product) {
-      let index = state.cart.findIndex((item) => item.id === product.id);
+      let index = state.cart.findIndex((item) => 
+        (item.variant !== undefined && item.id === product.id && item.variant.product.id === product.variant.product.id) 
+        || (item.variant === undefined && item.id === product.id));
       state.cart[index] = product;
     }
   },

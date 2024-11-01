@@ -46,7 +46,7 @@
                 <div class="cartItem__trash__wrapper">
                     <img src="/images/icons/trash.png"
                         class="cartItem__trash"
-                        @click="deleteFromCart(cartItemData.id)"/>
+                        @click="deleteFromCart"/>
                 </div>
             </div>
     </v-card>
@@ -90,7 +90,7 @@
         },
         methods: {
             deleteFromCart(id) {
-                this.$store.commit("deleteFromCart", id)
+                this.$store.commit("deleteFromCart", this.currentItem)
             }
         }
     }
@@ -188,7 +188,7 @@
             font-weight: bold;
         }
         .cartItem__quantity {
-            width: 70px;
+            width: 100px;
         }
         .cartItem__brand, .cartItem__color__size {
             padding-left: 0 !important; 

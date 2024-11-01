@@ -10,14 +10,15 @@
                     <div v-for="(item, id) in option.values" 
                         :key="id">
                         <div :class="`configurableProduct__item-${productData.id}`"
-                            :id="`${productData.id}-${option.attribute_code}-${item.value_index}`"
-                            :style="isColor(option, item)"
+                            :id="selectedId"
+                            :style="getOptionStyle(option, item, productData.id + '-' + option.attribute_code + '-' + item.value_index)"
                             @click="chooseOption(option, item)">
                             <p v-if="option.attribute_code === 'size'"
                                 class="configurableProduct__item__label">
                                 {{ item.label }}
                             </p>
-                            <p class="configurableProduct__item__none">
+                            <p class="configurableProduct__item__none"
+                                :style="getUnavailableOptionStyle(productData.id + '-' + option.attribute_code + '-' + item.value_index)">
                                 ×
                             </p>
                         </div>
@@ -39,23 +40,8 @@
                 availableSizes: [],
                 unavailableColors: [],
                 unavailableSizes: [],
-                imageSrc: ''
-            }
-        },
-        watch: {
-            unavailableSizes() {
-                this.unavailableSizes.forEach((id) => {
-                    let div = document.getElementById(id);
-                    div.style.pointerEvents = 'none';
-                    div.querySelector('.configurableProduct__item__none').style.display = 'block';
-                })
-            },
-            unavailableColors() {
-                this.unavailableColors.forEach((id) => {
-                    let div = document.getElementById(id);
-                    div.style.pointerEvents = 'none';
-                    div.querySelector('.configurableProduct__item__none').style.display = 'block';
-                })
+                imageSrc: '',
+                selectedId: null
             }
         },
         props: {
@@ -65,54 +51,64 @@
             }
         },
         methods: {
-            isColor(option, item) {
+            getOptionStyle(option, item, selectedId) {
+                const isUnavailable = this.unavailableColors.find((colorId) => colorId === selectedId) 
+                    || this.unavailableSizes.find((sizeId) => sizeId === selectedId);
+
+                let isSelected
+                if (this.selectedColor && selectedId === this.selectedColor ) isSelected = true
+                if (this.selectedSize && selectedId === this.selectedSize ) isSelected = true
                 return {
                     'background-color': option.attribute_code === 'color' ? item.value : '#fff',
+                    'border': isSelected ? '2px solid #ffd814': '1px solid #000',
+                    'pointer-events': isUnavailable ? 'none' : 'auto'
                 }
             },
+
+            getUnavailableOptionStyle(selectedId) {
+                const isUnavailable = this.unavailableColors.find((colorId) => colorId === selectedId) 
+                    || this.unavailableSizes.find((sizeId) => sizeId === selectedId);
+                return isUnavailable ? 'display: block;' : ''                
+            },
+
             chooseOption(option, item) {
-                let id = this.productData.id + '-' + option.attribute_code + '-' + item.value_index;
+                this.selectedId = this.productData.id + '-' + option.attribute_code + '-' + item.value_index;
                 this.availableColors = [];
                 this.availableSizes = [];
 
-                if (this.selectedColor === id || this.selectedSize === id) {
+                if (this.selectedColor === this.selectedId || this.selectedSize === this.selectedId) {
                     // если уже выбран цвет/размер с таким айди
-                    if (this.selectedColor === id) {
+                    if (this.selectedColor === this.selectedId) {
                         this.imageSrc = '';
-                        this.deleteUnavailableSizes();
+                        this.unavailableSizes = [];
                         this.selectedColor = null;
                     }
-                    if (this.selectedSize === id) {
-                        this.deleteUnavailableColors();
+                    if (this.selectedSize === this.selectedId) {
+                        this.unavailableColors = [];
                         this.selectedSize = null;
                     }
-
-                    // снимаем выделение с него
-                    document.getElementById(id).style.border = '1px solid #000';
                 } 
                 else if (this.selectedColor !== null && this.selectedColor.split('-')[1] === option.attribute_code) {
                     // если опять выбран цвет, но с другим айди
-                    document.getElementById(this.selectedColor).style.border = '1px solid #000';
-                    this.deleteUnavailableSizes();
-                    this.changeOptionData(id, option, item)
+                    this.unavailableSizes = [];
+                    this.changeOptionData(option, item)
                 }
                 else if (this.selectedSize !== null && this.selectedSize.split('-')[1] === option.attribute_code) {
                     // если опять выбран размер, но с другим айди
-                    document.getElementById(this.selectedSize).style.border = '1px solid #000';
-                    this.deleteUnavailableColors();
-                    this.changeOptionData(id, option, item)
+                    this.unavailableColors = [];
+                    this.changeOptionData(option, item)
                 } 
                 else {                
                     // если этот цвет/размер еще не выбран
-                    this.changeOptionData(id, option, item)
+                    this.changeOptionData(option, item)
                     
                 }
             
             },
-            changeOptionData(id, option, item) {
+            changeOptionData(option, item) {
                 // задаем новые значения выбранных цвета и размера
                 if (option.attribute_code === 'color') { 
-                    this.selectedColor = id;
+                    this.selectedColor = this.selectedId;
 
                     // меняем картинку товара в зависимости от цвета
                     let selectedVariant = this.productData.variants.find((variant) => {
@@ -125,10 +121,7 @@
                         this.imageSrc = selectedVariant.product.image;
                     }
                 }
-                if (option.attribute_code === 'size') this.selectedSize = id;
-
-                // выделяем выбранный цвет/размер
-                document.getElementById(id).style.border = '2px solid #ffd814';
+                if (option.attribute_code === 'size') this.selectedSize = this.selectedId;
 
                 // заполняем массив доступных размеров и цветов
                 this.productData.variants.forEach((variant) => {
@@ -188,20 +181,6 @@
                         }
                     })
                 }
-            },
-            deleteUnavailableColors() { // убираем крестик с недоступных цветов
-                this.unavailableColors.forEach((color) => {
-                    document.getElementById(color).style.pointerEvents = 'auto';
-                    document.getElementById(color).querySelector('.configurableProduct__item__none').style.display = 'none';
-                })
-                this.unavailableColors = []
-            },
-            deleteUnavailableSizes() { // убираем крестик с недоступных размеров
-                this.unavailableSizes.forEach((size) => {
-                    document.getElementById(size).style.pointerEvents = 'auto';
-                    document.getElementById(size).querySelector('.configurableProduct__item__none').style.display = 'none';
-                })
-                this.unavailableSizes = []
             }
         }
     }
